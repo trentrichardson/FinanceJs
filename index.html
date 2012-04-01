@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+
+		<title>Finance.js - Javascript Finance, Loan, and Currency Formatting Methods</title>
+
+		<meta name="Description" content="A javascript object with loan, finance, money and number formatting methods" />
+		<meta name="Keywords" content="javascript,calculator,loan,finance,interest,principle,format,money,currency,amortization,schedule" />
+		
+		<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
+		<script type="text/javascript" src="finance.js"></script>
+
+		<style type="text/css">
+			/*
+			------------------------------
+				layout
+			------------------------------
+			*/
+			body,img,p,h1,h3,fieldset,form,pre,code{ margin:0; padding:0; border:0; }
+			body {
+				font: 12px/16px Arial, Helvetica, sans-serif;
+				border-top: solid 5px #A04334;
+				background-color: #FAF9F4;
+				text-align: center;
+			}
+			noscript{ color: #ff0000; font-weight: bold; }
+			h1{ font-family: Times, serif; color: #555; margin: 0 0 20px -40px; letter-spacing: 2px; }
+			h2{ padding: 10px 25px; margin: 10px -65px; font-size: 1.75em; font-family: Helvetica, sans-serif; font-weight: normal; letter-spacing: 4px; text-transform: uppercase; color: #777; }
+			h3{ margin: 20px 0 0 0; font-size: 1.5em;}
+			p{ line-height: 18px; margin: 10px 0; }
+			a{ color: #7B94B2; }
+			a:hover{ color: #5B7492; }
+			#wrapper{ text-align: left; margin: 40px auto; background-color: #ffffff; width: 500px; min-height: 200px; padding: 25px 25px 25px 65px; }
+			div.example{  }
+			pre{ padding: 10px; -moz-border-radius: 5px; -webkit-border-radius: 5px; border-radius: 5px;}
+			pre.code{background-color: #333; color: #fff; overflow: auto;}
+			pre.result{ background-color: #bbb; color: #555; }
+		</style>
+		
+		<script type="text/javascript">
+			$(document).ready(function(){
+				$('.example').each(function(){
+					var $t = $(this),
+						$code = $t.children('pre.code'),
+						$result = $t.children('pre.result');
+						
+					if($result.length > 0){
+						var result = eval($code.text()),
+							output = '',
+							k = null;
+						
+						if(result && result.constructor == Array){
+							output = '[\n\t';
+							for(var i=0; i<4; i++){
+								output += '{\n\t';
+								for(k in result[i])
+									if(result[i].hasOwnProperty(k))
+										output += '\t'+ k +': '+ result[i][k] +'\n\t';
+								output += '},\n\t';
+							}
+							output += '...\n]';
+							result = output;
+						}
+						$result.text(result);
+					}
+				});
+			});
+		</script>
+	</head>
+
+	<body>
+		<div id="wrapper">
+			<h1>Finance.js - Common Finance Functions</h1>
+			
+			<p>This library provides basic finance methods to compute finance amortization schedules, payment amounts, number and currency formatting. Methods are provided to obtain the payment, interest rate, amount financed, or months financed given 3 of any of the 4.</p>
+			<p>Finance.js has no dependencies and may be used by itself. <a href="http://trentrichardson.com/" title="Back to TrentRichardson.com">Back to TrentRichardson.com</a></p>
+			
+			<a href="http://carbounce.com" title="Car Bounce" style="display: inline-block;width:350px;padding: 10px;background-color: #fbfbfb;border: dotted 4px #e8e8e8;color: #9EC45F;font-size: 16px;text-decoration:none;letter-spacing:1px;"><img src="http://carbounce.com/img/logo_small.png" alt="Car Bounce" align="left" style="margin-right: 20px;"/>Finance.js was contributed by the excellent CarBounce App.</a>	
+			
+			<h2>Download</h2>
+			<p>You can download, fork, and issue pull requests on GitHub.</p>
+			<p><a href="#" title="Download Finance.js on GitHub">Download Finance.js on Github</a></p>
+			<h2>Finance and Loan Functions</h2>
+			
+			<div id="example1" class="example">
+				<h3>Calculate the Financed Payment Amount</h3>
+				<p>Three parameters: amount, months, interest rate (percent)</p>
+				<pre class="code">finance.calculatePayment(25000, 60, 5.25);</pre>
+				<pre class="result"></pre>
+			</div>
+
+
+			<div id="example2" class="example">
+				<h3>Calculate the Financed Amount</h3>
+				<p>Three parameters: months, interest rate (percent), payment</p>
+				<pre class="code">finance.calculateAmount(60, 5.25, 474.65);</pre>
+				<pre class="result"></pre>
+			</div>
+
+
+			<div id="example3" class="example">
+				<h3>Calculate the Months Financed</h3>
+				<p>Three parameters: amount, interest rate (percent), payment</p>
+				<pre class="code">finance.calculateMonths(25000, 5.25, 474.65);</pre>
+				<pre class="result"></pre>
+			</div>
+			
+			
+			<div id="example4" class="example">
+				<h3>Calculate the Financed Interest Rate</h3>
+				<p>Three parameters: amount, months, payment</p>
+				<pre class="code">finance.calculateInterest(25000, 60, 474.65);</pre>
+				<pre class="result"></pre>
+			</div>
+
+			
+			<div id="example5" class="example">
+				<h3>Calculate the Accrued Interest</h3>
+				<p>If your money is in a bank account accruing interest, how much does it earn over x months? Three parameters: principle amount, months, interest rate (percent)</p>
+				<pre class="code">finance.calculateAccruedInterest(25000, 60, 5.25);</pre>
+				<pre class="result"></pre>
+			</div>
+
+			
+			<div id="example6" class="example">
+				<h3>Create Amortization Schedule</h3>
+				<p>Create an amortization schedule.  The result should be an array the length the number of months. Each entry is an object. Four parameters: principle amount, months, interest rate (percent), start date (optional Date object)</p>
+				<pre class="code">finance.calculateAmortization(25000, 60, 5.25, new Date(2011,11,20) );</pre>
+				<pre class="result"></pre>
+			</div>
+
+			<h2>Currency Formatting</h2>
+			
+			<div id="example7" class="example">
+				<h3>Format a Number</h3>
+				<p>Format a number with a certain precision. Two parameters: number, precision (optional, defaults to 0)</p>
+				<pre class="code">finance.numberFormat(25000.123456, 2);</pre>
+				<pre class="result"></pre>
+			</div>
+			
+			<div id="example8" class="example">
+				<h3>Format Currency</h3>
+				<p>Format a number to a certain currency. Two parameters: number, settings (optional, defaults to 'USD'). If settings option is a string it is treated as a currency name.  If it is an object it is used as currency settings.</p>
+				<pre class="code">finance.currencyFormat(25000.123456);</pre>
+				<pre class="result"></pre>
+			</div>
+			
+			<div id="example9" class="example">
+				<p>Setting can be a string of a currency.</p>
+				<pre class="code">finance.currencyFormat(25000.123456, 'EUR');</pre>
+				<pre class="result"></pre>
+			</div>
+			
+			<div id="example10" class="example">
+				<p>Settings can be an object of options.</p>
+				<pre class="code">finance.currencyFormat(25000.123456, { before: '', after: ' Dollars', precision: 0 });</pre>
+				<pre class="result"></pre>
+			</div>
+			
+			<div id="example11" class="example">
+				<h3>Format a Percent</h3>
+				<p>Format a number with a certain precision. Two parameters: number, precision (optional, defaults to 0)</p>
+				<pre class="code">finance.percentFormat(25000.123456, 2);</pre>
+				<pre class="result"></pre>
+			</div>
+			
+			<div id="example12" class="example">
+				<h3>Create and Remove a Currency</h3>
+				<p>You may create a currency.  The library comes with USD, GBP, and EUR.  To set the default currency set finance.settings.currency to your preference.  Two parameters: key, settings</p>
+				<pre class="code">finance.addCurrency('Dollars', { before: '', after: ' Dollars', precision: 0 });</pre>
+				<pre class="result"></pre>
+			</div>
+			
+			<div id="example13" class="example">
+				<p>Use the new currency</p>
+				<pre class="code">finance.currencyFormat(25000.123456, 'Dollars');</pre>
+				<pre class="result"></pre>
+			</div>
+			
+			<div id="example14" class="example">
+				<p>To remove a currency.  One parameter: key</p>
+				<pre class="code">finance.removeCurrency('Dollars');</pre>
+				<pre class="result"></pre>
+			</div>
+			
+			<h2>License</h2>
+			<p>You may use this project under MIT or GPL licenses.</p>
+			<p><a href="http://trentrichardson.com/Impromptu/GPL-LICENSE.txt" title="GPL License">GPL License</a></p>
+			<p><a href="http://trentrichardson.com/Impromptu/MIT-LICENSE.txt" title="MIT License">MIT License</a></p>
+		</div>
+	</body>
+</html>
