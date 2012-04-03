@@ -18,13 +18,14 @@
 	*	Defaults
 	*/
 	lib.settings = {
-			currency: 'USD',
-			currencies: {
-					USD: { before: '$', after: '', precision: 2 }, // $
-					GBP: { before:'£', after: '', precision:2 }, // £ or &#163;
-					EUR: { before:'€', after: '', precision:2 }, // € or &#8364;
-					percent: { before: '', after: '%', precision:0 },
-					defaults: { before:'', after:'', precision:0 }
+			format: 'number',
+			formats: {
+					USD: { before: '$', after: '', precision: 2, decimal: '.', thousand: ',', group: 3, negative: '-' }, // $
+					GBP: { before:'£', after: '', precision: 2, decimal: '.', thousand: ',', group: 3, negative: '-' }, // £ or &#163;
+					EUR: { before:'€', after: '', precision: 2, decimal: '.', thousand: ',', group: 3, negative: '-' }, // € or &#8364;
+					percent: { before: '', after: '%', precision: 0, decimal: '.', thousand: ',', group: 3, negative: '-' },
+					number: { before: '', after: '', precision: null, decimal: '.', thousand: ',', group: 3, negative: '-'},
+					defaults: { before: '', after: '', precision: 0, decimal: '.', thousand: ',', group: 3, negative: '-' }
 				}
 		};
 
@@ -41,55 +42,63 @@
 			return object;
 		};
 	
+	
 	/*
-	*	Currencies
+	*	Formatting
 	*/
-
+	
 	// add a currency format to library
-	lib.addCurrency = function(key, options){
-			
-			this.settings.currencies[key] = this.defaults(options, this.settings.currencies.defaults);
-			
+	lib.addFormat = function(key, options){			
+			this.settings.formats[key] = this.defaults(options, this.settings.formats.defaults);
 			return true;
 		};
 
 	// remove a currency format from library
-	lib.removeCurrency = function(key){
-			delete this.settings.currencies[key];
+	lib.removeFormat = function(key){
+			delete this.settings.formats[key];
 			return true;
 		};
 
-
-	/*
-	*	Formatting
-	*/
-
-	// return a number to a specific precision
-	lib.numberFormat = function(num, precision){
-			if(precision === undefined)
-				precision = 0;
-			return  parseFloat(Number(num)).toFixed(precision);
-		};
-
-	// return a number formatted in the specified currency or setting
-	lib.currencyFormat = function(num, settings){
+	// format a number or currency
+	lib.format = function(num, settings, override){			
+			num = parseFloat(num);
+			
 			if(settings === undefined)
-				settings = this.settings.currencies[this.settings.currency];
+				settings = this.settings.formats[this.settings.format];
 			else if(typeof settings == 'string')
-				settings = this.settings.currencies[settings];
+				settings = this.settings.formats[settings];
 			else settings = settings;
+			settings = this.defaults(settings, this.settings.formats.defaults);
+			
+			if(override !== undefined)
+				settings = this.defaults(override, settings);
+			
+			// set precision
+			if(settings.precision != null)
+				num = num.toFixed(settings.precision);
+				
+			var isNeg = num < 0,
+				numParts = Math.abs(num).toString().split('.'),
+				baseLen = numParts[0].length;
 
-			settings = this.defaults(settings, this.settings.currencies.defaults);
-			return  settings.before + this.numberFormat(num, settings.precision) + settings.after;
+			// add thousands and group
+			numParts[0] = numParts[0].replace(/(\d)/g, function(str, m1, offset, s){
+					return (offset > 0 && (baseLen-offset) % settings.group == 0)? settings.thousand + m1 : m1;
+				});
+				
+			// add decimal
+			num = numParts.join(settings.decimal);
+
+			// add negative if applicable
+			if(isNeg && settings.negative){
+				num = settings.negative[0] + num;
+				if(settings.negative.length > 1)
+					num += settings.negative[1];
+			}
+			
+			return  settings.before + num + settings.after;
 		};
 
-	// create a formatted percent 
-	lib.percentFormat = function(num, precision){
-			var tmp = this.settings.currencies.percent;
-			if(precision)
-				tmp.precision = precision;
-			return  this.currencyFormat(num, tmp);
-		};
 
 
 	/*

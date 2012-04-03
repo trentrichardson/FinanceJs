@@ -83,7 +83,7 @@
 			<p><a href="https://github.com/trentrichardson/FinanceJs" title="Download Finance.js on GitHub">Download Finance.js on Github</a></p>
 			<h2>Finance and Loan Functions</h2>
 			
-			<div id="example1" class="example">
+			<div class="example">
 				<h3>Calculate the Financed Payment Amount</h3>
 				<p>Three parameters: amount, months, interest rate (percent)</p>
 				<pre class="code">finance.calculatePayment(25000, 60, 5.25);</pre>
@@ -91,7 +91,7 @@
 			</div>
 
 
-			<div id="example2" class="example">
+			<div class="example">
 				<h3>Calculate the Financed Amount</h3>
 				<p>Three parameters: months, interest rate (percent), payment</p>
 				<pre class="code">finance.calculateAmount(60, 5.25, 474.65);</pre>
@@ -99,7 +99,7 @@
 			</div>
 
 
-			<div id="example3" class="example">
+			<div class="example">
 				<h3>Calculate the Months Financed</h3>
 				<p>Three parameters: amount, interest rate (percent), payment</p>
 				<pre class="code">finance.calculateMonths(25000, 5.25, 474.65);</pre>
@@ -107,7 +107,7 @@
 			</div>
 			
 			
-			<div id="example4" class="example">
+			<div class="example">
 				<h3>Calculate the Financed Interest Rate</h3>
 				<p>Three parameters: amount, months, payment</p>
 				<pre class="code">finance.calculateInterest(25000, 60, 474.65);</pre>
@@ -115,7 +115,7 @@
 			</div>
 
 			
-			<div id="example5" class="example">
+			<div class="example">
 				<h3>Calculate the Accrued Interest</h3>
 				<p>If your money is in a bank account accruing interest, how much does it earn over x months? Three parameters: principle amount, months, interest rate (percent)</p>
 				<pre class="code">finance.calculateAccruedInterest(25000, 60, 5.25);</pre>
@@ -123,7 +123,7 @@
 			</div>
 
 			
-			<div id="example6" class="example">
+			<div class="example">
 				<h3>Create Amortization Schedule</h3>
 				<p>Create an amortization schedule.  The result should be an array the length the number of months. Each entry is an object. Four parameters: principle amount, months, interest rate (percent), start date (optional Date object)</p>
 				<pre class="code">finance.calculateAmortization(25000, 60, 5.25, new Date(2011,11,20) );</pre>
@@ -132,55 +132,55 @@
 
 			<h2>Currency Formatting</h2>
 			
-			<div id="example7" class="example">
+			<div class="example">
 				<h3>Format a Number</h3>
-				<p>Format a number with a certain precision. Two parameters: number, precision (optional, defaults to 0)</p>
-				<pre class="code">finance.numberFormat(25000.123456, 2);</pre>
+				<p>One parameters: number</p>
+				<pre class="code">finance.format(-2530023420269.123456);</pre>
 				<pre class="result"></pre>
 			</div>
 			
-			<div id="example8" class="example">
+			<div class="example">
+				<p>Format a number with a certain precision. Two parameters: number, settings (optional, 'number')</p>
+				<pre class="code">finance.format(25000.123456, {precision:2});</pre>
+				<pre class="result"></pre>
+			</div>
+			
+			<div class="example">
 				<h3>Format Currency</h3>
-				<p>Format a number to a certain currency. Two parameters: number, settings (optional, defaults to 'USD'). If settings option is a string it is treated as a currency name.  If it is an object it is used as currency settings.</p>
-				<pre class="code">finance.currencyFormat(25000.123456);</pre>
+				<p>Format a number to a certain currency. Two parameters: number, settings (optional). If settings option is a string it is treated as a currency name.  If it is an object it is used as currency settings.</p>
+				<pre class="code">finance.format(25000.123456, 'USD');</pre>
 				<pre class="result"></pre>
 			</div>
 			
-			<div id="example9" class="example">
-				<p>Setting can be a string of a currency.</p>
-				<pre class="code">finance.currencyFormat(25000.123456, 'EUR');</pre>
+			<div class="example">
+				<p>Settings can be format, and then override with options.</p>
+				<pre class="code">finance.format(-25000.123456, 'GBP', { negative: '()', precision: 3, thousand: '' });</pre>
 				<pre class="result"></pre>
 			</div>
 			
-			<div id="example10" class="example">
-				<p>Settings can be an object of options.</p>
-				<pre class="code">finance.currencyFormat(25000.123456, { before: '', after: ' Dollars', precision: 0 });</pre>
-				<pre class="result"></pre>
-			</div>
-			
-			<div id="example11" class="example">
+			<div class="example">
 				<h3>Format a Percent</h3>
-				<p>Format a number with a certain precision. Two parameters: number, precision (optional, defaults to 0)</p>
-				<pre class="code">finance.percentFormat(25000.123456, 2);</pre>
+				<p>Format a number with a certain precision. Two parameters: number, settings ("percent" is a format)</p>
+				<pre class="code">finance.format(25000.123456, 'percent');</pre>
 				<pre class="result"></pre>
 			</div>
 			
-			<div id="example12" class="example">
+			<div class="example">
 				<h3>Create and Remove a Currency</h3>
-				<p>You may create a currency.  The library comes with USD, GBP, and EUR.  To set the default currency set finance.settings.currency to your preference.  Two parameters: key, settings</p>
-				<pre class="code">finance.addCurrency('Dollars', { before: '', after: ' Dollars', precision: 0 });</pre>
+				<p>You may create a currency.  The library comes with "USD", "GBP", and "EUR" currency formats and "number" and "percent" numeric formats.  To set the default currency set finance.settings.currency to your preference.  Two parameters: key, settings</p>
+				<pre class="code">finance.addFormat('Dollars', { before: '', after: ' Dollars', precision: 0, thousand: ',', group: 3, decimal: '.', negative: '-' });</pre>
 				<pre class="result"></pre>
 			</div>
 			
-			<div id="example13" class="example">
+			<div class="example">
 				<p>Use the new currency</p>
-				<pre class="code">finance.currencyFormat(25000.123456, 'Dollars');</pre>
+				<pre class="code">finance.format(25000.123456, 'Dollars');</pre>
 				<pre class="result"></pre>
 			</div>
 			
-			<div id="example14" class="example">
+			<div class="example">
 				<p>To remove a currency.  One parameter: key</p>
-				<pre class="code">finance.removeCurrency('Dollars');</pre>
+				<pre class="code">finance.removeFormat('Dollars');</pre>
 				<pre class="result"></pre>
 			</div>
 			
