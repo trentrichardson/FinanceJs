@@ -178,6 +178,47 @@
 
 			return result;
 		};
+  
+      //	calculate time and money savings by paying extra
+	lib.calculateEarlyPayoff = function(finAmount, finInterest, finMonths, finRemainingMonths, finExtraPay, finMonthlyPay){
+      
+        var principle1 = finAmount, interest1 = 0, principle2 = finAmount, interest2 = 0;
+        var ep;
+        var mRate = finInterest / 1200;
+        var paidOff = finMonths;
+
+        for (months=1; months<finMonths; months++)
+        {
+            if ( months > (finMonths-finRemainingMonths)) {
+                ep = finExtraPay;
+            }
+            else {
+                ep = 0;
+            }
+            var mi1 = mRate * principle1;
+            interest1 += mi1;
+            principle1 -= ( finMonthlyPay - mi1 );
+
+            if ( principle2 > 0 )
+            {
+                var mi2 = mRate * principle2;
+                interest2 += mi2;
+                principle2 -= ( finMonthlyPay - mi2 + ep );
+                if ( principle2 <= 0 ) {
+                    principle2 = 0;
+                    paidOff = months;
+                }
+            }
+        }
+
+        var timeDifference = finMonths - paidOff;
+        var y = parseInt( timeDifference/12, 10 );	
+        months = timeDifference%12;
+        
+        var saving = interest1 - interest2;  
+      
+        return [saving, y, months];
+    };
 
 	// get an amortization schedule [ { principle: 0, interest: 0, payment: 0, paymentToPrinciple: 0, paymentToInterest: 0}, {}, {}...]
 	lib.calculateAmortization = function(finAmount, finMonths, finInterest, finDate){
