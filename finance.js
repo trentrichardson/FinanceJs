@@ -214,10 +214,12 @@
         var timeDifference = finMonths - paidOff;
         var y = parseInt( timeDifference/12, 10 );	
         months = timeDifference%12;
-        
-        var saving = interest1 - interest2;  
       
-        return [saving, y, months];
+        return {
+            saving: interest1 - interest2,
+            years: y,
+            months: months
+        };
     };
 
 	// get an amortization schedule [ { principle: 0, interest: 0, payment: 0, paymentToPrinciple: 0, paymentToInterest: 0}, {}, {}...]
