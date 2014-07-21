@@ -137,12 +137,14 @@
 				<p>Calculate how much money and time saved by paying early. Six parameters: principle amount, interest rate (percent), months, remaining months, additional monthly payment, current monthly payment</p>
 				<pre class="code">finance.calculateEarlyPayoff(24000, 5, 72, 72, 100, 386.52);</pre>
 				<pre class="result" id="earlyPay"></pre>
-                <p>This function will return 3 values as an array, so it is recommended that you save the return to a variable. When you want to retrieve those values you would do as you would call an array. array[0] contains total saving value, array[1] contains shortened number of years and array[2] contains shortened number of months.<br>
-                <br>Calling the function:
+                <p>This function will return an object with 3 values (saving, years, months), so it is recommended that you save the return to a variable. <br>
+                <br><strong>Calling the function:</strong>
                 <br>var result = finance.calculateEarlyPayoff(24000, 5, 72, 72, 100, 386.52);
                 <br><br>
-                Retrieving values:
-                <br>element.innerHTML = result[0]; // Total saving value.
+                <strong>Retrieving values:</strong>
+                <br>var totalSavings = result.saving; 
+                <br>var shortenedYears = result.years;
+                <br>var shortenedMonths = result.months;
                 </p>
 			</div>
           
