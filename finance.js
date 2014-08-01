@@ -231,7 +231,7 @@
 				schedule = [],
 				currInterest = null,
 				currPrinciple = null,
-				currDate = (finDate !== undefined && finDate.constructor === Date)? finDate : (new Date());
+				currDate = (finDate !== undefined && finDate.constructor === Date)? new Date(finDate) : (new Date());
 			
 			for(var i=0; i<finMonths; i++){
 				currInterest = balance * finInterest/1200;
